@@ -1,0 +1,1 @@
+sudo curl -L "https://raw.githubusercontent.com/tenogy/docker/master/compose/elasticsearch/docker-compose-elastic-$(uname -s)-$(uname -m).yml" -o /mnt/data/docker/compose/elasticsearch/docker-compose.yml
