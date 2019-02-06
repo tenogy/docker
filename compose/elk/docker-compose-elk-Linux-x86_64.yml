@@ -38,4 +38,5 @@ services:
 volumes:
   esdata:
     driver: local
-networks: esnet:
+networks:
+  esnet:
