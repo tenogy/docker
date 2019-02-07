@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
     container_name: es
+    user: 1000:1000
     environment:
       - cluster.name=es
       - discovery.type=single-node
