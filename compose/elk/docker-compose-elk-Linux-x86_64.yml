@@ -10,9 +10,9 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       #- "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - ES_JAVA_OPTS=-Xms4g -Xmx4g
-    #mem_limit: 6g
-    #memswap_limit: 6g
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    mem_limit: 2g
+    memswap_limit: 0
     ulimits:
       memlock:
         soft: -1
@@ -36,5 +36,20 @@ services:
       - 5601:5601
     networks:
       - esnet
+
+  # Container to monitor the host
+  metricbeat:
+    restart: unless-stopped
+    image: docker.elastic.co/beats/metricbeat:6.6.0
+    container_name: metricbeat
+    user: root
+    command: -system.hostfs=/hostfs
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/data/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+    network_mode: host
 networks:
   esnet:
