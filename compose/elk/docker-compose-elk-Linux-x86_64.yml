@@ -43,7 +43,7 @@ services:
     image: docker.elastic.co/beats/metricbeat:6.6.0
     container_name: metricbeat
     depends_on:
-      - es
+      - elasticsearch
       - kibana
     user: root
     command: -system.hostfs=/hostfs
