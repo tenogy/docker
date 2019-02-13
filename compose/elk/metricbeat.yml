@@ -53,7 +53,12 @@ output.elasticsearch:
 setup.kibana:
   host: "172.17.0.1:5601"
 
-setup.dashboards.enabled: true
+setup.dashboards.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 1
+  index.codec: best_compression
 
 logging.level: warning
 logging.to_files: true
