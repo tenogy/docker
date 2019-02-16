@@ -55,9 +55,10 @@ setup.kibana:
 
 setup.dashboards.enabled: false
 
+setup.template.overwrite: true
 setup.template.settings:
   index.number_of_shards: 1
-  index.number_of_replicas: 1
+  index.number_of_replicas: 0
   index.codec: best_compression
 
 logging.level: warning

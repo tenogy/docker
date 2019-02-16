@@ -1,0 +1,28 @@
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+  index.codec: best_compression
+
+setup.kibana:
+  host: "10.0.2.12:5601"
+
+output.elasticsearch:
+  hosts: ["10.0.2.12:9200"]
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+filebeat.modules:
+  - module: iis
+    access:
+      enabled: true
+      var.paths: ["C:/inetpub/logs/LogFiles/*/*.log"]
+    error:
+      enabled: true
+      var.paths: ["C:/Windows/System32/LogFiles/HTTPERR/*.log"]

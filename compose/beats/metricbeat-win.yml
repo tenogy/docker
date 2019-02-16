@@ -1,0 +1,40 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.overwrite: true
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+  index.codec: best_compression
+
+setup.kibana:
+  host: "10.0.2.12:5601"
+
+output.elasticsearch:
+  hosts: ["10.0.2.12:9200"]
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+metricbeat.modules:
+  - module: system
+    metricsets:
+      [
+        "cpu",
+        "filesystem",
+        "fsstat",
+        "memory",
+        "network",
+        "process",
+        "core",
+        "diskio",
+      ]
+    period: 10s
+    enabled: true
+    processes: [".*"]
+  - module: windows
+    metricsets: ["service"]
+    enabled: true
+    period: 60s
