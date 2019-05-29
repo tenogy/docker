@@ -2,10 +2,13 @@ version: "3.4"
 
 services:
   centos0:
-    image: sandbox
+    image: tenogy/ansible
     container_name: centos0
     ports:
       - "49100:22"
+    volumes:
+      - ./hosts:/etc/ansible/hosts
+      - ./ansible.cfg:/etc/ansible/ansible.cfg
   centos1:
     image: sandbox
     container_name: centos1

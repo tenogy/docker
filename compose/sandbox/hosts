@@ -1,0 +1,9 @@
+
+centos1
+centos2
+centos3
+
+[all:vars]
+ansible_connection=ssh
+ansible_user=maple
+ansible_ssh_pass=pass
