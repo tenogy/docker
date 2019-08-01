@@ -9,18 +9,28 @@ services:
     volumes:
       - ./hosts:/etc/ansible/hosts
       - ./ansible.cfg:/etc/ansible/ansible.cfg
+      - ./playbooks:/playbooks
   centos1:
     image: sandbox
     container_name: centos1
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "49101:22"
   centos2:
     image: sandbox
     container_name: centos2
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "49102:22"
   centos3:
     image: sandbox
     container_name: centos3
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "49103:22"
