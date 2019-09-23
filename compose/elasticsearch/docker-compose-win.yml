@@ -1,0 +1,30 @@
+version: "3"
+services:
+  elasticsearch:
+    restart: unless-stopped
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
+    container_name: es
+    environment:
+      - cluster.name=es
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      #- ES_JAVA_OPTS=-Xms4g -Xmx4g
+    #mem_limit: 6g
+    #memswap_limit: 6g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - "D:/compose/es/data:/usr/share/elasticsearch/data"
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+networks: esnet:
