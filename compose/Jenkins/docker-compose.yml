@@ -1,11 +1,14 @@
 version: "3.4"
 services:
   jenkins:
-    image: jenkins/jenkins:alpine
+    image: jenkinsci/blueocean
     container_name: jenkins
     restart: unless-stopped
+    user: 0:0
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - jenkins_data:/var/jenkins_home
+      - $HOME:/home
     ports:
       - 8080:8080
     networks:
