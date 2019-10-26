@@ -23,13 +23,13 @@ services:
       - 9090:9090
     networks:
       - back-tier
-    restart: always
+    restart: unless-stopped
     depends_on:
       - cadvisor
   node-exporter:
     image: prom/node-exporter
     container_name: node-exporter
-    restart: always
+    restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -55,7 +55,7 @@ services:
       - 9080:8080
     networks:
       - back-tier
-    restart: always
+    restart: unless-stopped
   grafana:
     image: grafana/grafana
     container_name: grafana
