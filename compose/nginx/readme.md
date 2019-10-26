@@ -1,24 +1,19 @@
 ##Step 1: setting http-proxy
-nginx.cfg:
-
+nginx.conf:
+```
    
-    worker_processes 4;
+worker_processes auto;
 
-    events { worker_connections 1024; }
+events { worker_connections 1024; }
 
-    http {
-        sendfile on;
-
-    upstream app_servers {
-            server 192.168.0.1:8080;
-        }
-        
-    }
+http {
+    sendfile on;
 
     server {
+        server_name video.onlineecology.com;
         listen 80;
         location / {
-            proxy_pass         http://app_servers;
+            proxy_pass         http://192.168.10.1:8081;
             proxy_http_version 1.1;
             proxy_set_header   Upgrade $http_upgrade;
             proxy_set_header   Connection keep-alive;
@@ -27,46 +22,54 @@ nginx.cfg:
             proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
         }
-        }
     }
-
-
-
+}
+```
 docker-compose.yml:
+```
+version: "3.4"
 
-    version: "3.4"
-
-    services:
-    nginx:
-        restart: unless-stopped
-        image: nginx:alpine
-        volumes:
-        - ./nginx.conf:/etc/nginx/nginx.conf
-        ports:
-        - 80:80
-        - 443:443
-        networks:
-        - frontend
-        command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
+services:
+  nginx:
+    restart: unless-stopped
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      - 443:443
     networks:
-    frontend:
-        external:
-        name: frontend
+      - frontend
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
+networks:
+  frontend:
+    external:
+      name: frontend
+```
 
 ##Step 2: Install certificate
 nginx configuration:
 ```
 ...
  location /.well-known/acme-challenge/ {
-       root /web/certificate/root;
+       root /app/nginx/cert;
   }
 ...
 ```
+docker-compose.yml:
+```
+...
+volumes:
+      - /app/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /app/nginx/cert:/app/nginx/cert
+...
+```
+
 run command:
 
-`docker run -it --rm -v "/etc/letsencrypt:/etc/letsencrypt" -v "/web/certificate/root:/var/www" certbot/certbot certonly --webroot -w /var/www -m **user@gmail.com** --noninteractive  --rsa-key-size 4096 --agree-tos --force-renewal -d **yoursite.com** --staging`
+`docker run -it --rm -v "/etc/letsencrypt:/etc/letsencrypt" -v "/app/nginx/cert:/var/www" certbot/certbot certonly --webroot -w /var/www -m **user@gmail.com** --noninteractive  --rsa-key-size 4096 --agree-tos --force-renewal -d **yoursite.com** --staging`
 
 If all is ok run commnad withaut `--staging` flag
 
