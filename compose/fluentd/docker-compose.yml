@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+  proxy:
+    restart: unless-stopped
+    container_name: fluentd
+    image: tenogy/fluentd
+    environment:
+      - FLUENTD_CONF=fluentd.conf
+    volumes:
+      - ./:/fluentd/etc
+    ports:
+      - 9880:9880
+    networks:
+      - fluentd
+networks:
+  fluentd: {}
