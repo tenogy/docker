@@ -1,42 +1,42 @@
-# my global config
 global:
-  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
-  # scrape_timeout is set to the global default (10s).
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    datacenter: dc1
 
-# Alertmanager configuration
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-          # - alertmanager:9093
-
-# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
-rule_files:
-  # - "first_rules.yml"
-  # - "second_rules.yml"
-
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: "prometheus"
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-
-    static_configs:
-      - targets: ["prometheus:9090"]
-
-  - job_name: "node-exporter"
+  - job_name: node
     static_configs:
       - targets: ["node-exporter:9100"]
+        labels:
+          host: host1
+          service: node
+    relabel_configs: &relabelConfigs
+      - source_labels: ["host", "service"]
+        target_label: instance
+        regex: ^(.*);(.*)$
+        replacement: "${1}:${2}"
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+        labels:
+          host: host1
+          service: prometheus
+    relabel_configs: *relabelConfigs
 
   - job_name: cadvisor
     static_configs:
-      - targets:
-          - cadvisor:8080
+      - targets: ["cadvisor:8080"]
+        labels:
+          host: host1
+          service: cadvisor
+    relabel_configs: *relabelConfigs
+
   - job_name: grafana
     static_configs:
-      - targets:
-          - grafana:3000
+      - targets: ["grafana:3000"]
+        labels:
+          host: host1
+          service: grafana
+    relabel_configs: *relabelConfigs
