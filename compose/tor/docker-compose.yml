@@ -1,0 +1,14 @@
+version: "3.4"
+
+services:
+  proxy:
+    restart: unless-stopped
+    container_name: proxy
+    image: dperson/torproxy
+    ports:
+      - 9001:9050
+      - 9002:8118
+    networks:
+      - proxy
+networks:
+  proxy: {}
