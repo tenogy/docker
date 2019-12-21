@@ -23,7 +23,7 @@ So
 `docker run -it --rm -v "/app/nginx/ssl:/etc/nginx/ssl" --entrypoint "openssl" certbot/certbot dhparam -out /etc/nginx/ssl/dhparam.pem 2048`
 
 ##Step 4: re-run nginx service
-`docker-compose restart`
+`docker-compose restart` or `docker exec nginx nginx -s reload`
 
 ##Step 5: Setting up certificate renew
 Create service based on `docker-compose.cert.yml`
