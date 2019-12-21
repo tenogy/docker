@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  proxy:
+    restart: unless-stopped
+    container_name: proxy
+    image: osminogin/tor-simple
+    ports:
+      - 9001:9050
+    networks:
+      - proxy
+networks:
+  proxy: {}

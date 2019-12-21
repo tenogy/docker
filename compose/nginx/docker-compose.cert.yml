@@ -6,6 +6,6 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
+      - /app/nginx/letsencrypt:/etc/letsencrypt
       - /app/nginx/cert/:/var/www
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done;'"
