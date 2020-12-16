@@ -1,0 +1,11 @@
+version: "3.4"
+
+services:
+  3proxy:
+    image: riftbit/3proxy
+    container_name: 3proxy
+    environment:
+      - PROXY_LOGIN=testUser
+      - PROXY_PASSWORD=testPassword
+    ports:
+      - 1080:1080
