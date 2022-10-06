@@ -1,15 +1,17 @@
 version: "3.4"
 volumes:
-  postgres_data: {}
-  admin-data: {}
+  pg-data:
+    external: true
+  pg-admin-data:
+    external: true
 networks:
   pg-net:
 services:
-  db:
+  pg:
     image: postgres:11.2-alpine
     restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
       - <<backups path>>:/var/lib/postgresql/backups
     environment:
       POSTGRES_PASSWORD: 123
@@ -24,7 +26,7 @@ services:
     ports:
       - 8003:80
     volumes:
-      - admin-data:/var/lib/pgadmin
+      - pg-admin-data:/var/lib/pgadmin
       - <<backups path>>:/var/lib/pgadmin/storage/admin/backups
     environment:
       PGADMIN_DEFAULT_EMAIL: <<email>>@gmail.com
