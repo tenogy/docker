@@ -2,13 +2,11 @@ version: "3.4"
 volumes:
   pg-data:
     external: true
-  pg-admin-data:
-    external: true
 networks:
   pg-net:
 services:
   pg:
-    image: postgres:11.2-alpine
+    image: postgres:14.5-alpine
     container_name: pg
     restart: always
     volumes:
@@ -28,10 +26,10 @@ services:
     ports:
       - 8003:80
     volumes:
-      - pg-admin-data:/var/lib/pgadmin
-      - <<backups path>>:/var/lib/pgadmin/storage/admin/backups
+      - <<storage path>>:/var/lib/pgadmin/storage
     environment:
       PGADMIN_DEFAULT_EMAIL: <<email>>@gmail.com
       PGADMIN_DEFAULT_PASSWORD: 123
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
     networks:
       - pg-net
