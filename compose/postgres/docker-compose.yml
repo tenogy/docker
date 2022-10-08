@@ -4,16 +4,18 @@ volumes:
     external: true
 networks:
   pg-net:
+    external:
+      name: pg-net
 services:
   pg:
     image: postgres:14.5-alpine
     container_name: pg
-    restart: always
+    restart: unless-stopped
     volumes:
       - pg-data:/var/lib/postgresql/data
-      - <<backups path>>:/var/lib/postgresql/backups
+      - /storage/pg/backups/db:/var/lib/postgresql/backups
     environment:
-      POSTGRES_PASSWORD: 123
+      POSTGRES_PASSWORD: pg-password
     ports:
       - 8002:5432
     networks:
@@ -22,14 +24,15 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
-    restart: always
+    restart: unless-stopped
     ports:
       - 8003:80
     volumes:
-      - <<storage path>>:/var/lib/pgadmin/storage
+    # owner should be the pgadmin user (UID: 5050) in the pgadmin group (GID: 5050). # chown -R 5050:5050 /storage/pgadmin  
+      - /storage/pgadmin:/var/lib/pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: <<email>>@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: 123
+      PGADMIN_DEFAULT_EMAIL: some@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: agadmin-password
       PGADMIN_LISTEN_ADDRESS: 0.0.0.0
     networks:
       - pg-net
