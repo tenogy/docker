@@ -1,23 +1,52 @@
 version: "3.4"
-volumes:
-  pg-data:
-    external: true
 networks:
   pg-net:
-    external:
-      name: pg-net
 services:
-  pg:
-    image: postgres:14.5-alpine
+  postgres1:
+    image: docker.local-net/postgres:15.0.2
     container_name: pg
     restart: unless-stopped
     volumes:
-      - pg-data:/var/lib/postgresql/data
-      - /storage/pg/backups/db:/var/lib/postgresql/backups
+      - ./data/postgres1/:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf:ro
     environment:
-      POSTGRES_PASSWORD: pg-password
+      POSTGRES_PASSWORD: passward
+      PGUSER: postgres
+      PGPASSWORD: passward
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      AWS_ACCESS_KEY_ID: "key"
+      AWS_SECRET_ACCESS_KEY: "pass"
+      WALG_S3_PREFIX: "s3://test"
+      AWS_ENDPOINT: "http://minio.local-net:9000"
+      AWS_S3_FORCE_PATH_STYLE: "true"
+      WALG_COMPRESSION_METHOD: brotli
     ports:
       - 8002:5432
+    networks:
+      - pg-net
+
+  postgres2:
+    image: docker.local-net/postgres:15.0.2
+    container_name: pg2
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres2/:/var/lib/postgresql/data/
+      - ./postgresql2.conf:/etc/postgresql/postgresql.conf:ro
+    environment:
+      POSTGRES_PASSWORD: passward
+      PGUSER: postgres
+      PGPASSWORD: passward
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      AWS_ACCESS_KEY_ID: "key"
+      AWS_SECRET_ACCESS_KEY: "pass"
+      WALG_S3_PREFIX: "s3://test"
+      AWS_ENDPOINT: "http://minio.local-net:9000"
+      AWS_S3_FORCE_PATH_STYLE: "true"
+      WALG_COMPRESSION_METHOD: brotli
+    ports:
+      - 8005:5432
     networks:
       - pg-net
 
@@ -28,11 +57,10 @@ services:
     ports:
       - 8003:80
     volumes:
-    # owner should be the pgadmin user (UID: 5050) in the pgadmin group (GID: 5050). # chown -R 5050:5050 /storage/pgadmin  
-      - /storage/pgadmin:/var/lib/pgadmin
+      - /storage/pg/admin:/var/lib/pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: some@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: agadmin-password
+      PGADMIN_DEFAULT_PASSWORD: passward
       PGADMIN_LISTEN_ADDRESS: 0.0.0.0
     networks:
       - pg-net
