@@ -1,0 +1,22 @@
+version: "3"
+networks:
+  webproxy:
+    external:
+      name: webproxy
+services:
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    restart: unless-stopped
+    volumes:
+      - /c/minio:/data
+    ports:
+      - 9000:9000
+      - 9090:9090
+    environment:
+      - MINIO_ROOT_USER=user
+      - MINIO_ROOT_PASSWORD=pwd
+    networks:
+      webproxy:
+        ipv4_address: 192.168.16.105
+    command: server /data --console-address ":9090"
