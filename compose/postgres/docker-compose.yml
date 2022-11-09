@@ -57,7 +57,7 @@ services:
     ports:
       - 8003:80
     volumes:
-      - /storage/pg/admin:/var/lib/pgadmin
+      - /storage/pg/admin:/var/lib/pgadmin   # owner should be the pgadmin user (UID: 5050) in the pgadmin group (GID: 5050). # chown -R 5050:5050 /storage/pgadmin 
     environment:
       PGADMIN_DEFAULT_EMAIL: some@gmail.com
       PGADMIN_DEFAULT_PASSWORD: passward
