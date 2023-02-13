@@ -18,6 +18,8 @@ So
 - `chain.pem`    : used for OCSP stapling in Nginx >=1.3.7.
 - `cert.pem`     : will break many server configurations, and should not be used without reading further documentation.
 
+check https://github.com/certbot/certbot/blob/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
+
 ##Step 3: Generate secret
 
 `docker run -it --rm -v "/app/nginx/ssl:/etc/nginx/ssl" --entrypoint "openssl" certbot/certbot dhparam -out /etc/nginx/ssl/dhparam.pem 2048`
