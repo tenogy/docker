@@ -3,13 +3,17 @@ see nginx.conf and docker-compose.yml
 
 ##Step 2: Install certificate
 
+certbot https://hub.docker.com/r/certbot/certbot/tags
+```
+docker pull certbot/certbot:v2.6.0
+```
 run command:
 
-`docker run -it --rm -v "/app/nginx/letsencrypt:/etc/letsencrypt" -v "/app/nginx/cert:/var/www" certbot/certbot certonly --webroot -w /var/www -m <some user>@gmail.com --noninteractive --rsa-key-size 4096 --agree-tos --force-renewal -d yoursite.com --staging`
+`docker run -it --rm -v "/storage/nginx/letsencrypt:/etc/letsencrypt" -v "/storage/nginx/cert:/var/www" certbot/certbot:v2.6.0 certonly --webroot -w /var/www -m <some user>@gmail.com --noninteractive --rsa-key-size 4096 --agree-tos --force-renewal -d yoursite.com --staging`
 
 If all is ok run commnad withaut `--staging` flag
 
-Certificate will be generated into `/app/nginx/letsencrypt/yoursite.com` directory 
+Certificate will be generated into `/storage/nginx/letsencrypt/yoursite.com` directory 
 
 So 
 
